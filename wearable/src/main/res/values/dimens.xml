@@ -22,8 +22,8 @@
     <dimen name="y_offset_date_round">95dp</dimen>
 
     <!-- X and Y offsets for temperature -->
-    <dimen name="x_offset_temperature">20dp</dimen>
-    <dimen name="x_offset_temperature_round">25dp</dimen>
+    <dimen name="x_offset_temperature">25dp</dimen>
+    <dimen name="x_offset_temperature_round">35dp</dimen>
     <dimen name="y_offset_temperature">130dp</dimen>
     <dimen name="y_offset_temperature_round">135dp</dimen>
 

@@ -121,7 +121,6 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
         Paint mDatePaint;
         Paint mHourPaint;
         Paint mMinutePaint;
-        Paint mSecondPaint;
         Paint mAmPmPaint;
         Paint mColonPaint;
         Paint mMaxTempPaint;
@@ -244,7 +243,6 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             mBackgroundPaint.setColor(mColorBackgroundInteractive);
             mHourPaint = createTextPaint(mColorTextInteractive);
             mMinutePaint = createTextPaint(mColorTextInteractive, TYPEFACE_ROBOTO_CONDENSED);
-            mSecondPaint = createTextPaint(mColorTextInteractive);
             mAmPmPaint = createTextPaint(mColorTextAmPm);
             mColonPaint = createTextPaint(mColorTextColon);
             mDatePaint = createTextPaint(mColorTextDate);
@@ -252,7 +250,6 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             mMinTempPaint = createTextPaint(mColorTextMinTemperature, TYPEFACE_ROBOTO_CONDENSED);
             mWeatherBitmapPaint = new Paint();
 
-            mColonWidth = mColonPaint.measureText(COLON_STRING);
             mCalendar = Calendar.getInstance();
             mDate = new Date();
             initFormats();
@@ -367,12 +364,14 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             // Set the text sizes to the paint objects.
             mHourPaint.setTextSize(timeTextSize);
             mMinutePaint.setTextSize(timeTextSize);
-            mSecondPaint.setTextSize(timeTextSize);
             mColonPaint.setTextSize(timeTextSize);
             mAmPmPaint.setTextSize(amPmTextSize);
             mDatePaint.setTextSize(dateTextSize);
             mMaxTempPaint.setTextSize(temperatureTextSize);
             mMinTempPaint.setTextSize(temperatureTextSize);
+
+            // Get the colon width.
+            mColonWidth = mColonPaint.measureText(COLON_STRING);
         }
 
         @Override
@@ -405,25 +404,22 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             }
 
             // Adjust paint colors based on interactive or ambient mode.
-            adjustPaintColorToCurrentMode(mBackgroundPaint,
-                    mColorBackgroundInteractive, mColorBackgroundAmbient);
+            adjustPaintColorToCurrentMode(mBackgroundPaint,mColorBackgroundInteractive, mColorBackgroundAmbient);
             adjustPaintColorToCurrentMode(mHourPaint, mColorTextInteractive, mColorTextAmbient);
             adjustPaintColorToCurrentMode(mMinutePaint, mColorTextInteractive, mColorTextAmbient);
-            adjustPaintColorToCurrentMode(mSecondPaint, mColorTextInteractive, mColorTextAmbient);
-            adjustPaintColorToCurrentMode(mAmPmPaint, mColorTextAmPm, mColorTextAmPm);
-            adjustPaintColorToCurrentMode(mColonPaint, mColorTextColon, mColorTextDate);
-            adjustPaintColorToCurrentMode(mDatePaint, mColorTextDate, mColorTextDate);
+            adjustPaintColorToCurrentMode(mColonPaint, mColorTextColon, mColorTextAmbient);
+            adjustPaintColorToCurrentMode(mAmPmPaint, mColorTextAmPm, mColorTextAmbient);
+            adjustPaintColorToCurrentMode(mDatePaint, mColorTextDate, mColorTextAmbient);
             adjustPaintColorToCurrentMode(mMaxTempPaint, mColorTextInteractive, mColorTextAmbient);
-            adjustPaintColorToCurrentMode(mMinTempPaint, mColorTextInteractive, mColorTextAmbient);
+            adjustPaintColorToCurrentMode(mMinTempPaint, mColorTextMinTemperature, mColorTextAmbient);
 
             // Adjust anti alias.
             if (mLowBitAmbient) {
                 boolean antiAlias = !inAmbientMode;
                 mHourPaint.setAntiAlias(antiAlias);
                 mMinutePaint.setAntiAlias(antiAlias);
-                mSecondPaint.setAntiAlias(antiAlias);
-                mAmPmPaint.setAntiAlias(antiAlias);
                 mColonPaint.setAntiAlias(antiAlias);
+                mAmPmPaint.setAntiAlias(antiAlias);
                 mDatePaint.setAntiAlias(antiAlias);
                 mMaxTempPaint.setAntiAlias(antiAlias);
                 mMinTempPaint.setAntiAlias(antiAlias);
@@ -525,7 +521,7 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             if (isInAmbientMode() || mMute || mShouldDrawColons) {
                 canvas.drawText(COLON_STRING, x, mYOffsetTime, mColonPaint);
             }
-            x += 2 * mColonWidth;
+            x += mColonWidth;
 
             // Draw the minutes.
             String minuteString = formatTwoDigitNumber(mCalendar.get(Calendar.MINUTE));
@@ -535,63 +531,51 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             // If in interactive, un-muted and 12-hour mode, draw AM/PM.
             if ((isInAmbientMode() || mMute) && !is24Hour) {
                 x += mColonWidth;
-                canvas.drawText(getAmPmString(
-                        mCalendar.get(Calendar.AM_PM)), x, mYOffsetTime, mAmPmPaint);
+                canvas.drawText(getAmPmString(mCalendar.get(Calendar.AM_PM)), x, mYOffsetTime, mAmPmPaint);
             }
 
             // Only render the day of week, date, weather icon, max and min temperatures if there
             // is no peek card, so they do not bleed into each other.
             if (getPeekCardPosition().isEmpty()) {
-                // Draw only the max temp in ambient mode.
+                // Draw only the max and min temp in ambient mode.
                 if (isInAmbientMode()) {
-                    // Max temp
-                    String maxTemp = String.format(getString(R.string.format_temperature), String.valueOf(mMaxTemp));
-                    canvas.drawText(
-                            maxTemp,
-                            mXOffsetTemperature,
-                            mYOffsetTemperature,
-                            mMaxTempPaint);
+                    // Check if weather data was received from handheld.
+                    if(mWeatherBitmap != null) {
+                        // Max temp
+                        x = mXOffsetTime;
+                        String maxTemp = String.format(getString(R.string.format_temperature), String.valueOf(mMaxTemp));
+                        canvas.drawText(maxTemp, x, mYOffsetTemperature - 5, mMaxTempPaint);
+
+                        // Min temp
+                        x += mMaxTempPaint.measureText(maxTemp) + mColonWidth;
+                        String minTemp = String.format(getString(R.string.format_temperature), String.valueOf(mMinTemp));
+                        canvas.drawText(minTemp, x, mYOffsetTemperature - 5, mMinTempPaint);
+                    }
                 } else {
-                    // Day of week
+                    // Day of week.
                     x = mXOffsetDate;
-                    canvas.drawText(
-                            mDayOfWeekFormat.format(mDate),
-                            x,
-                            mYOffsetDate,
-                            mDatePaint);
+                    canvas.drawText(mDayOfWeekFormat.format(mDate), x, mYOffsetDate, mDatePaint);
 
                     // Date
                     x += mDatePaint.measureText(mDayOfWeekFormat.format(mDate));
-                    canvas.drawText(
-                            ", " + mDateFormat.format(mDate),
-                            x,
-                            mYOffsetDate,
-                            mDatePaint);
+                    canvas.drawText(", " + mDateFormat.format(mDate), x, mYOffsetDate, mDatePaint);
 
-                    // Weather icon
-                    x = mXOffsetTemperature;
-                    canvas.drawBitmap(mWeatherBitmap,
-                            x,
-                            mYOffsetTemperature - 35,
-                            mWeatherBitmapPaint);
+                    // Show weather data only if weather update has been received from handheld.
+                    if(mWeatherBitmap != null) {
+                        // Weather icon.
+                        x = mXOffsetTemperature;
+                        canvas.drawBitmap(mWeatherBitmap, x, mYOffsetTemperature - 50, mWeatherBitmapPaint);
 
-                    // Max temp
-                    x += mWeatherBitmap.getWidth() + 2* mColonWidth;
-                    String maxTemp = String.format(getString(R.string.format_temperature), String.valueOf(mMaxTemp));
-                    canvas.drawText(
-                            maxTemp,
-                            x,
-                            mYOffsetTemperature,
-                            mMaxTempPaint);
+                        // Max temp.
+                        x += mWeatherBitmap.getWidth() + 1.5 * mColonWidth;
+                        String maxTemp = String.format(getString(R.string.format_temperature), String.valueOf(mMaxTemp));
+                        canvas.drawText(maxTemp, x, mYOffsetTemperature, mMaxTempPaint);
 
-                    // Min temp
-                    x += mMaxTempPaint.measureText(maxTemp) + mColonWidth;
-                    String minTemp = String.format(getString(R.string.format_temperature), String.valueOf(mMinTemp));
-                    canvas.drawText(
-                            minTemp,
-                            x,
-                            mYOffsetTemperature,
-                            mMinTempPaint);
+                        // Min temp.
+                        x += mMaxTempPaint.measureText(maxTemp) + mColonWidth;
+                        String minTemp = String.format(getString(R.string.format_temperature), String.valueOf(mMinTemp));
+                        canvas.drawText(minTemp, x, mYOffsetTemperature, mMinTempPaint);
+                    }
                 }
             }
         }

@@ -7,15 +7,12 @@
     <color name="color_text_interactive">#FFFFFF</color>
     <color name="color_text_ambient">#FFFFFF</color>
     <color name="color_text_colon">#FFFFFF</color>
-    <color name="color_text_am_pm">#B0BEC5</color>
-    <color name="color_text_date">#B0BEC5</color>
-    <color name="color_text_min_temperature">#B0BEC5</color>
+    <color name="color_text_am_pm">#F5F5F5</color>
+    <color name="color_text_date">#F5F5F5</color>
+    <color name="color_text_min_temperature">#F5F5F5</color>
 
     <!-- Background colors -->
     <color name="color_background_interactive">#2196F3</color>
     <color name="color_background_ambient">#000000</color>
-
-
-
 
 </resources>
