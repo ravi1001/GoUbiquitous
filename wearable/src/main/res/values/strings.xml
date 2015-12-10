@@ -1,0 +1,16 @@
+<resources xmlns:xliff="http://schemas.android.com/apk/res-auto">
+    <string name="app_name">SunshineWatchface</string>
+    <string name="my_digital_name">Sunshine Digital</string>
+
+
+
+    <string name="digital_name">Sunshine Digital</string>
+    <string name="digital_background_color">Background color</string>
+    <string name="digital_config_name">Digital watch face configuration</string>
+    <string name="digital_am">AM</string>
+    <string name="digital_pm">PM</string>
+
+    <string name="format_temperature"><xliff:g id="temp">%1s</xliff:g>\u00B0</string>
+
+
+</resources>

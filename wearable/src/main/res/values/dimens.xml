@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text sizes -->
+    <dimen name="text_size_time">30dp</dimen>
+    <dimen name="text_size_time_round">35dp</dimen>
+    <dimen name="text_size_date">8dp</dimen>
+    <dimen name="text_size_temperature">20dp</dimen>
+    <dimen name="text_size_temperature_round">25dp</dimen>
+    <dimen name="text_size_am_pm">20dp</dimen>
+    <dimen name="text_size_am_pm_round">25dp</dimen>
+
+    <!-- X and Y offsets for time -->
+    <dimen name="x_offset_time">45dp</dimen>
+    <dimen name="x_offset_time_round">55dp</dimen>
+    <dimen name="y_offset_time">80dp</dimen>
+    <dimen name="y_offset_time_round">85dp</dimen>
+
+    <!-- X and Y offsets for date -->
+    <dimen name="x_offset_date">40dp</dimen>
+    <dimen name="x_offset_date_round">50dp</dimen>
+    <dimen name="y_offset_date">90dp</dimen>
+    <dimen name="y_offset_date_round">95dp</dimen>
+
+    <!-- X and Y offsets for temperature -->
+    <dimen name="x_offset_temperature">20dp</dimen>
+    <dimen name="x_offset_temperature_round">25dp</dimen>
+    <dimen name="y_offset_temperature">130dp</dimen>
+    <dimen name="y_offset_temperature_round">135dp</dimen>
+
+</resources>
