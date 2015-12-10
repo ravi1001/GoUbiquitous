@@ -7,9 +7,9 @@
     <color name="color_text_interactive">#FFFFFF</color>
     <color name="color_text_ambient">#FFFFFF</color>
     <color name="color_text_colon">#FFFFFF</color>
-    <color name="color_text_am_pm">#F5F5F5</color>
-    <color name="color_text_date">#F5F5F5</color>
-    <color name="color_text_min_temperature">#F5F5F5</color>
+    <color name="color_text_am_pm">#EEEEEE</color>
+    <color name="color_text_date">#EEEEEE</color>
+    <color name="color_text_min_temperature">#EEEEEE</color>
 
     <!-- Background colors -->
     <color name="color_background_interactive">#2196F3</color>

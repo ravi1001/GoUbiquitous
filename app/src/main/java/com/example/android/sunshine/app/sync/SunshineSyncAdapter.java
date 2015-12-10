@@ -559,7 +559,6 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter implements
 
             // Add temperatures and weather icon asset into data map.
             PutDataMapRequest dataMap = PutDataMapRequest.create(PATH_WITH_WEATHER);
-            dataMap.getDataMap().putLong(TIMESTAMP, System.currentTimeMillis());
             dataMap.getDataMap().putInt(MAX_TEMP_KEY, (int) high);
             dataMap.getDataMap().putInt(MIN_TEMP_KEY, (int) low);
             dataMap.getDataMap().putAsset(WEATHER_IMAGE_KEY, toAsset(iconBitmap));

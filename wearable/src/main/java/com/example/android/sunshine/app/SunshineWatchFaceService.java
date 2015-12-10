@@ -146,9 +146,8 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
         float mYOffsetTemperature;
 
         // Weather icon bitmap, max and min temperatures received from the handheld.
-        // TODO: Testing values, remove later.
-        int mMaxTemp = 82;
-        int mMinTemp = -25;
+        int mMaxTemp;
+        int mMinTemp;
         Bitmap mWeatherBitmap;
 
         // AM/PM strings.
@@ -250,12 +249,10 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             mMinTempPaint = createTextPaint(mColorTextMinTemperature, TYPEFACE_ROBOTO_CONDENSED);
             mWeatherBitmapPaint = new Paint();
 
+            mWeatherBitmap = null;
             mCalendar = Calendar.getInstance();
             mDate = new Date();
             initFormats();
-
-            // TODO: Only for testing, remove and init to null later.
-            mWeatherBitmap = BitmapFactory.decodeResource(resources, R.drawable.ic_clear);
         }
 
         @Override
@@ -341,24 +338,24 @@ public class SunshineWatchFaceService extends CanvasWatchFaceService {
             // Load resources that have alternate values for round watches.
             Resources resources = SunshineWatchFaceService.this.getResources();
             boolean isRound = insets.isRound();
-            mXOffsetTime = resources.getDimension(isRound
+            mXOffsetTime = resources.getDimensionPixelSize(isRound
                     ? R.dimen.x_offset_time_round : R.dimen.x_offset_time);
-            mYOffsetTime = resources.getDimension(isRound
+            mYOffsetTime = resources.getDimensionPixelSize(isRound
                     ? R.dimen.y_offset_time_round : R.dimen.y_offset_time);
-            mXOffsetDate = resources.getDimension(isRound
+            mXOffsetDate = resources.getDimensionPixelSize(isRound
                     ? R.dimen.x_offset_date_round : R.dimen.x_offset_date);
-            mYOffsetDate = resources.getDimension(isRound
+            mYOffsetDate = resources.getDimensionPixelSize(isRound
                     ? R.dimen.y_offset_date_round : R.dimen.y_offset_date);
-            mXOffsetTemperature = resources.getDimension(isRound
+            mXOffsetTemperature = resources.getDimensionPixelSize(isRound
                     ? R.dimen.x_offset_temperature_round : R.dimen.x_offset_temperature);
-            mYOffsetTemperature = resources.getDimension(isRound
+            mYOffsetTemperature = resources.getDimensionPixelSize(isRound
                     ? R.dimen.y_offset_temperature_round : R.dimen.y_offset_temperature);
-            float timeTextSize = resources.getDimension(isRound
+            float timeTextSize = resources.getDimensionPixelSize(isRound
                     ? R.dimen.text_size_time_round : R.dimen.text_size_time);
-            float dateTextSize = resources.getDimension(R.dimen.text_size_date);
-            float amPmTextSize = resources.getDimension(isRound
+            float dateTextSize = resources.getDimensionPixelSize(R.dimen.text_size_date);
+            float amPmTextSize = resources.getDimensionPixelSize(isRound
                     ? R.dimen.text_size_am_pm_round : R.dimen.text_size_am_pm);
-            float temperatureTextSize = resources.getDimension(isRound
+            float temperatureTextSize = resources.getDimensionPixelSize(isRound
                     ? R.dimen.text_size_temperature_round : R.dimen.text_size_temperature);
 
             // Set the text sizes to the paint objects.
